@@ -12,8 +12,9 @@ class DateTimePicker extends DateTimePickerBase
 {
     public function  __construct($objParentObject, $strControlId = null) {
     parent::__construct($objParentObject, $strControlId);
-    $this->registerFiles();
-    $this->LinkField = $this->ControlId . '_mirror';
+        $this->registerFiles();
+        $this->LinkField = $this->ControlId . '_mirror';
+        $this->setHtmlAttribute('autocomplete', 'off');
 }
 
     protected function registerFiles() {

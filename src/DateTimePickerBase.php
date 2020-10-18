@@ -5,11 +5,10 @@ namespace QCubed\Plugin;
 use QCubed as Q;
 use QCubed\Bootstrap as Bs;
 use QCubed\Exception\Caller;
-use QCubed\Exception\InvalidCast;
 use QCubed\Project\Control\ControlBase;
 use QCubed\Project\Control\FormBase;
 use QCubed\Project\Application;
-use QCubed\Type;
+use QCubed\QDateTime;
 
 /**
  * Class DateTimePickerBase
@@ -30,6 +29,7 @@ class DateTimePickerBase extends DateTimePickerBaseGen
     const DEFAULT_OUTPUT_TIME = 'hh:ii:ss';
     const DEFAULT_OUTPUT_YEAR = 'yyyy';
 
+    /** @var string|null */
     protected $strText = null;
 
     /**
@@ -42,6 +42,7 @@ class DateTimePickerBase extends DateTimePickerBaseGen
         parent::__construct($objParentObject, $strControlId);
         $this->registerFiles();
         $this->LinkField = $this->ControlId . '_mirror';
+        $this->setHtmlAttribute('autocomplete', 'off');
     }
 
     /**
@@ -80,26 +81,6 @@ class DateTimePickerBase extends DateTimePickerBaseGen
         return true;
     }
 
-    /**
-     * Returns the current state of the control to be able to restore it later.
-     * @return mixed
-     */
-    protected function getState()
-    {
-        return array('text' => $this->Text);
-    }
-
-    /**
-     * Restore the state of the control.
-     * @param mixed $state Previously saved state as returned by GetState above.
-     */
-    protected function putState($state)
-    {
-        if (isset($state['text'])) {
-            $this->Text = $state['text'];
-        }
-    }
-
     /////////////////////////
     // Public Properties: GET
     /////////////////////////
@@ -116,45 +97,6 @@ class DateTimePickerBase extends DateTimePickerBaseGen
                     $objExc->incrementOffset();
                     throw $objExc;
                 }
-        }
-    }
-
-    /////////////////////////
-    // Public Properties: SET
-    /////////////////////////
-    /**
-     * PHP magic method implementation
-     *
-     * @param string $strName Property name
-     * @param string $mixValue Property value to be set
-     *
-     * @throws Caller|InvalidCast
-     */
-    public function __set($strName, $mixValue)
-    {
-        switch ($strName) {
-            case "Text":
-            case "Value":
-                try {
-                    $val = Type::cast($mixValue, Type::STRING);
-                    if ($val !== $this->strText) {
-                        $this->strText = $val;
-                        $this->addAttributeScript('val', $val);
-                    }
-                } catch (InvalidCast $objExc) {
-                    $objExc->incrementOffset();
-                    throw $objExc;
-                }
-                break;
-
-            default:
-                try {
-                    parent::__set($strName, $mixValue);
-                } catch (Caller $objExc) {
-                    $objExc->incrementOffset();
-                    throw $objExc;
-                }
-                break;
         }
     }
 }

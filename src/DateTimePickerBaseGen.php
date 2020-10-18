@@ -99,7 +99,6 @@ use QCubed\Type;
  *                              That is, when an invalid date is left in the input field by the user, the picker will forcibly
  *                              parse that value, and set the input's value to the new, valid date, conforming to the given format.
  * @property integer $MinuteStep Default: 5. The increment used to build the hour view. A preset is created for each minuteStep minutes.
- *
  * @property string $PickerPosition Default: 'bottom-right' (other value supported : 'bottom-left'). This option is currently
  *                              only available in the component implementation. With it you can place the picker just
  *                              under the input field.
@@ -120,7 +119,6 @@ class DateTimePickerBaseGen extends Bs\TextBox
     protected $strLinkField = null;
     /** @var string */
     protected $strLinkFormat = null;
-
     /** @var string */
     protected $strFormat = null;
     /** @var integer */
@@ -271,7 +269,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
         }
     }
 
-    public function __set($strName, $mixValue) //FormatDate
+    public function __set($strName, $mixValue)
     {
         switch ($strName) {
             case 'LinkField':
