@@ -15,17 +15,12 @@ class ExamplesForm extends Form
     protected $datetimepicker1;
     protected $datetimepicker2;
     protected $datetimepicker3;
-
     protected $yearpicker;
-
-    protected $textbox;
 
     protected $label1;
     protected $label2;
     protected $label3;
     protected $label4;
-
-    protected $label5;
 
     protected function formCreate()
     {
@@ -118,9 +113,6 @@ class ExamplesForm extends Form
     {
         $objControlToLookup = $this->getControl($params->ActionParameter);
         $this->label4->Text = $objControlToLookup->Text;
-        //$this->label4->Text = $this->yearpicker->Text;
-
-        //Application::displayAlert($this->yearpicker->Value);
     }
 
 }
