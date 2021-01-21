@@ -8,7 +8,9 @@ The DateTimePicker plugin allows to you use the DateTime Picker, which is a Boot
 Home page for the lib is https://github.com/smalot/bootstrap-datetimepicker and demo is at
 https://www.malot.fr/bootstrap-datetimepicker, where you can see example of use.
 
-![Image of kukrik](screenshot/datetimepicker_screenshot.jpg?raw=true)
+![Image of kukrik](screenshot/datetimepicker_screenshot_1.jpg?raw=true)
+
+![Image of kukrik](screenshot/datetimepicker_screenshot_2.jpg?raw=true)
 
 If you have not previously installed QCubed Bootstrap and twitter bootstrap, run the following actions on the command line of your main installation directory by Composer:
 ```
@@ -18,6 +20,6 @@ If you have not previously installed QCubed Bootstrap and twitter bootstrap, run
 and
 
 ```
-    omposer require kukrik/bootstrap-datetimepicker
+    composer require kukrik/bootstrap-datetimepicker
 ```
 
