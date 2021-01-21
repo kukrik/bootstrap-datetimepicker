@@ -14,40 +14,43 @@
         <p>Home page for the lib is <a href="https://github.com/smalot/bootstrap-datetimepicker">https://github.com/smalot/bootstrap-datetimepicker</a>
             and demo is at <a href="https://www.malot.fr/bootstrap-datetimepicker">https://www.malot.fr/bootstrap-datetimepicker</a>,
             where you can see example of use.</p>
+
+        <p>This QDateTime class takes care of converting the data to the correct format. Except for the YearPicker class,
+            which converts a year to a numeric value.</p>
     </div>
 
     <div class="form-horizontal" style="padding-top: 25px;">
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">DateTime Picking</label>
+            <label class="col-sm-2 control-label">DateTime Picking</label>
             <div class="col-sm-3">
                 <?= _r($this->datetimepicker1); ?>
             </div>
-            <p style="padding-top: 6px; display: inline-block;">Output to database in the correct format: <?= _r($this->label1); ?></p>
+            <p style="padding-top: 6px; display: inline-block;">Output the database through the QDateTime class in the datetime format: <?= _r($this->label1); ?></p>
         </div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">Date Picking</label>
+            <label class="col-sm-2 control-label">Date Picking</label>
             <div class="col-sm-3">
                 <?= _r($this->datetimepicker2); ?>
             </div>
-            <p style="padding-top: 6px; display: inline-block;">Output to database in the correct format: <?= _r($this->label2); ?></p>
+            <p style="padding-top: 6px; display: inline-block;">Output the database through the QDateTime class in the date format: <?= _r($this->label2); ?></p>
         </div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">Time Picking</label>
+            <label class="col-sm-2 control-label">Time Picking</label>
             <div class="col-sm-3">
                 <?= _r($this->datetimepicker3); ?>
             </div>
-            <p style="padding-top: 6px; display: inline-block;">Output to database in the correct format: <?= _r($this->label3); ?></p>
+            <p style="padding-top: 6px; display: inline-block;">Output the database through the QDateTime class in the time format: <?= _r($this->label3); ?></p>
         </div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">Year Picking</label>
+            <label class="col-sm-2 control-label">Year Picking</label>
             <div class="col-sm-3">
-                <?= _r($this->datetimepicker4); ?>
+                <?= _r($this->yearpicker); ?>
             </div>
-            <p style="padding-top: 6px; display: inline-block;">Output to database in the correct format: <?= _r($this->label4); ?></p>
+            <p style="padding-top: 6px; display: inline-block;">Output the database through the YearPicker class in the year format: <?= _r($this->label4); ?></p>
         </div>
 
     </div>

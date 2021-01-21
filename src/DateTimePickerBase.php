@@ -2,19 +2,18 @@
 
 namespace QCubed\Plugin;
 
-use QCubed as Q;
-use QCubed\Bootstrap as Bs;
-use QCubed\Exception\Caller;
 use QCubed\Project\Control\ControlBase;
 use QCubed\Project\Control\FormBase;
-use QCubed\Project\Application;
+use QCubed\Exception\Caller;
+use QCubed\Exception\InvalidCast;
 use QCubed\QDateTime;
+use QCubed\Type;
 
 /**
  * Class DateTimePickerBase
  *
- * @property string $Text is the contents of the textbox, itself.
- * @property string|null $Value Returns the value of the text. If the text is empty, will return null.
+ * @property null|QDateTime $DateTime
+ * @property string $DateTimePickerType
  *
  * @package QCubed\Plugin
  */
@@ -24,56 +23,48 @@ class DateTimePickerBase extends DateTimePickerBaseGen
     /**
      * Using these constants makes it easier to send the date and time to the database in the correct format.
      */
-    const DEFAULT_OUTPUT_DATETIME = 'yyyy-mm-dd hh:ii:ss';
-    const DEFAULT_OUTPUT_DATE = 'yyyy-mm-dd';
-    const DEFAULT_OUTPUT_TIME = 'hh:ii:ss';
-    const DEFAULT_OUTPUT_YEAR = 'yyyy';
+    const DEFAULT_OUTPUT_DATETIME = 'Datetime';
+    const DEFAULT_OUTPUT_DATE = 'Date';
+    const DEFAULT_OUTPUT_TIME = 'Time';
 
-    /** @var string|null */
-    protected $strText = null;
-
-    /**
-     * DateTimePickerBase constructor
-     *
-     * @param ControlBase|FormBase|null $objParentObject
-     * @param null|string $strControlId
-     */
-    public function __construct($objParentObject, $strControlId = null) {
-        parent::__construct($objParentObject, $strControlId);
-        $this->registerFiles();
-        $this->LinkField = $this->ControlId . '_mirror';
-        $this->setHtmlAttribute('autocomplete', 'off');
-    }
-
-    /**
-     * @throws Caller
-     */
-    protected function registerFiles() {
-        $this->AddJavascriptFile(QCUBED_DATETIMEPICKER_ASSETS_URL . "/js/bootstrap-datetimepicker.js");
-        $this->addCssFile(QCUBED_DATETIMEPICKER_ASSETS_URL . "/css/bootstrap-datetimepicker.css");
-        $this->AddCssFile(QCUBED_BOOTSTRAP_CSS); // make sure they know
-        $this->AddCssFile(QCUBED_FONT_AWESOME_CSS); // make sure they know
-    }
+    /** @var QDateTime|null */
+    protected $dttDateTime = null;
+    protected $strDateTimePickerType;
 
     public function parsePostData()
     {
-        $strKey = $this->strControlId . '_mirror';
-        if (array_key_exists($strKey, $_POST)) {
-            $strText = $_POST[$strKey];
-            $this->strText = $strText;
+        // Check to see if this Control's Value was passed in via the POST data
+        switch ($this->strDateTimePickerType) {
+            case self::DEFAULT_OUTPUT_DATETIME:
+                if (array_key_exists($this->strControlId, $_POST)) {
+                    parent::parsePostData();
+                    $this->dttDateTime = new QDateTime($this->strText, null, QDateTime::DATE_AND_TIME_TYPE);
+                    if ($this->dttDateTime->isNull()) {
+                        $this->dttDateTime = null;
+                    }
+                }
+                break;
+
+            case self::DEFAULT_OUTPUT_DATE:
+                if (array_key_exists($this->strControlId, $_POST)) {
+                    parent::parsePostData();
+                    $this->dttDateTime = new QDateTime($this->strText, null, QDateTime::DATE_ONLY_TYPE);
+                    if ($this->dttDateTime->isDateNull()) {
+                        $this->dttDateTime = null;
+                    }
+                }
+                break;
+
+            case self::DEFAULT_OUTPUT_TIME:
+                if (array_key_exists($this->strControlId, $_POST)) {
+                    parent::parsePostData();
+                    $this->dttDateTime = new QDateTime($this->strText, null, QDateTime::TIME_ONLY_TYPE);
+                    if ($this->dttDateTime->isTimeNull()) {
+                        $this->dttDateTime = null;
+                    }
+                }
+                break;
         }
-    }
-
-    protected function getControlHtml()
-    {
-        $strToReturn = parent::getControlHtml();
-
-        $strToReturn .= _nl() . sprintf('<input  id="%s" name="%s" value="%s" type="hidden" />',
-                $this->strControlId . '_mirror',
-                $this->strControlId . '_mirror',
-                $this->strText);
-
-        return $strToReturn;
     }
 
     public function validate()
@@ -81,14 +72,16 @@ class DateTimePickerBase extends DateTimePickerBaseGen
         return true;
     }
 
-    /////////////////////////
-    // Public Properties: GET
-    /////////////////////////
+    /**
+     * @param string $strName
+     * @return bool|mixed|null|string
+     * @throws Caller
+     */
     public function __get($strName)
     {
         switch ($strName) {
-            case "Text": return $this->strText;
-            case 'Value': return empty($this->strText) ? null : $this->strText;
+            case 'DateTime': return $this->dttDateTime ? clone($this->dttDateTime) : null;
+            case "DateTimePickerType": return $this->strDateTimePickerType;
 
             default:
                 try {
@@ -99,5 +92,40 @@ class DateTimePickerBase extends DateTimePickerBaseGen
                 }
         }
     }
-}
 
+    public function __set($strName, $mixValue)
+    {
+        switch ($strName) {
+            case 'DateTime':
+                try {
+                    $this->dttDateTime = Type::cast($mixValue, Type::DATE_TIME);
+                    if (!$this->dttDateTime) {
+                        parent::__set('Text', '');
+                    } else {
+                        parent::__set('Text', $this->dttDateTime->qFormat($this->strText));
+                    }
+                } catch (InvalidCast $objExc) {
+                    $objExc->incrementOffset();
+                    throw $objExc;
+                }
+                break;
+            case "DateTimePickerType":
+                try {
+                    $this->strDateTimePickerType = Type::cast($mixValue, Type::STRING);
+                } catch (InvalidCast $objExc) {
+                    $objExc->incrementOffset();
+                    throw $objExc;
+                }
+                break;
+
+            default:
+                try {
+                    parent::__set($strName, $mixValue);
+                    break;
+                } catch (Caller $objExc) {
+                    $objExc->incrementOffset();
+                    throw $objExc;
+                }
+        }
+    }
+}

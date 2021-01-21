@@ -18,6 +18,6 @@ If you have not previously installed QCubed Bootstrap and twitter bootstrap, run
 and
 
 ```
-    composer require kukrik/bootstrap-datetimepicker
+    omposer require kukrik/bootstrap-datetimepicker
 ```
 
