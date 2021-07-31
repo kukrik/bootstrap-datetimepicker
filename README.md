@@ -14,12 +14,12 @@ https://www.malot.fr/bootstrap-datetimepicker, where you can see example of use.
 
 If you have not previously installed QCubed Bootstrap and twitter bootstrap, run the following actions on the command line of your main installation directory by Composer:
 ```
-    composer require qcubed/bootstrap
-    composer require twbs/bootstrap
+    composer require twbs/bootstrap v3.3.7
 ```
 and
 
 ```
+    composer require kukrik/bootstrap
     composer require kukrik/bootstrap-datetimepicker
 ```
 

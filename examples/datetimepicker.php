@@ -61,6 +61,7 @@ class ExamplesForm extends Form
         $this->label2->setCssStyle('display', 'inline;');
 
         $this->datetimepicker3 = new Q\Plugin\DateTimePicker($this);
+
         $this->datetimepicker3->Language = 'de';
         //$this->datetimepicker3->WeekStart = 1;
         $this->datetimepicker3->TodayBtn = true;
@@ -68,12 +69,13 @@ class ExamplesForm extends Form
         $this->datetimepicker3->AutoClose = true;
         $this->datetimepicker3->StartView = 1;
         $this->datetimepicker3->MinView = 0;
-        $this->datetimepicker3->MaxView = 1;
+        $this->datetimepicker3->MaxView = 4;
         $this->datetimepicker3->ForceParse = false;
-        $this->datetimepicker3->Format = 'hh:ii';
+        $this->datetimepicker3->Format = 'hh:ii:ss'; //'hh:ii';
         $this->datetimepicker3->DateTimePickerType = Q\Plugin\DateTimePickerBase::DEFAULT_OUTPUT_TIME;
         $this->datetimepicker3->ActionParameter = $this->datetimepicker3->ControlId;
         $this->datetimepicker3->addAction(new Change(), new Ajax('setDate_3'));
+
 
         $this->label3 = new Bs\Label($this);
         $this->label3->setCssStyle('display', 'inline;');

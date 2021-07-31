@@ -2,10 +2,10 @@
     "name": "kukrik/bootstrap-datetimepicker",
     "description": "QCubed v4 plugin for Bootstrap DateTimePicker",
     "type": "qcubed-library",
-    "keywords": ["qcubed", "bootstrap-datetimepicker"],
+    "keywords": ["qcubed-4", "bootstrap-datetimepicker"],
     "license": "MIT",
     "require": {
-        "php": ">=5.6"
+        "php": ">=7.0"
     },
     "autoload": {
       "psr-4": {"QCubed\\Plugin\\": "src/"}

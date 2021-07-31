@@ -15,16 +15,23 @@ use QCubed\Project\Application;
  * @package QCubed\Plugin
  */
 
-class YearPicker extends DateTimePickerBaseGen
+class YearPickerBase extends DateTimePickerBaseGen
 {
-    //protected $strText = null;
+    protected $strText = null;
 
-    public function __construct($objParentObject, $strControlId = null) {
-        parent::__construct($objParentObject, $strControlId);
-        $this->StartView = 4;
-        $this->MinView = 4;
-        $this->ForceParse = false;
-        $this->Format = 'yyyy';
+    public function __get($strName)
+    {
+        switch ($strName) {
+            case 'Text': return $this->strText;
+
+            default:
+                try {
+                    return parent::__get($strName);
+                } catch (Caller $objExc) {
+                    $objExc->incrementOffset();
+                    throw $objExc;
+                }
+        }
     }
 
     public function __set($strName, $mixValue)

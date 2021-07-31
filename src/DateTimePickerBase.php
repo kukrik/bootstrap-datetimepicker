@@ -98,17 +98,23 @@ class DateTimePickerBase extends DateTimePickerBaseGen
         switch ($strName) {
             case 'DateTime':
                 try {
-                    $this->dttDateTime = Type::cast($mixValue, Type::DATE_TIME);
-                    if (!$this->dttDateTime) {
-                        parent::__set('Text', '');
-                    } else {
-                        parent::__set('Text', $this->dttDateTime->qFormat($this->strText));
-                    }
+                    $dtt = Type::cast($mixValue, Type::DATE_TIME);
                 } catch (InvalidCast $objExc) {
                     $objExc->incrementOffset();
                     throw $objExc;
                 }
+
+                if ($dtt->DateTime) {
+                    $this->Text = $dtt->qFormat("Y-m-d H:i:s");
+                } elseif($dtt->Date) {
+                    $this->Text = $dtt->qFormat("Y-m-d");
+                } elseif($dtt->Time) {
+                    $this->Text = $dtt->qFormat("h:mm z");
+                } else {
+                    $this->Text = '';
+                }
                 break;
+
             case "DateTimePickerType":
                 try {
                     $this->strDateTimePickerType = Type::cast($mixValue, Type::STRING);
