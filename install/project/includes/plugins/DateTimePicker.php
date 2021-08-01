@@ -13,7 +13,6 @@ use QCubed\Project\Control\ControlBase;
 use QCubed\Project\Control\FormBase;
 use QCubed\Project\Application;
 
-
 /**
  * DateTimePickerBase constructor
  *
@@ -43,5 +42,4 @@ class DateTimePicker extends DateTimePickerBase
 		$this->AddJavascriptFile(QCUBED_DATETIMEPICKER_ASSETS_URL . "/js/locales/bootstrap-datetimepicker.de.js");
 		$this->AddJavascriptFile(QCUBED_DATETIMEPICKER_ASSETS_URL . "/js/locales/bootstrap-datetimepicker.fr.js");
 	}
-
 }
