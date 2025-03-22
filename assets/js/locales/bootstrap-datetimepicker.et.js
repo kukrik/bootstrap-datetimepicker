@@ -3,7 +3,7 @@
  * Rene Korss <http://rene.korss.ee> 
  */
 ;(function($){
-	$.fn.datetimepicker.dates['ee'] = {
+	$.fn.datetimepicker.dates['et'] = {
 		days:        	["Pühapäev", "Esmaspäev", "Teisipäev", "Kolmapäev", "Neljapäev", "Reede", "Laupäev", "Pühapäev"],
 		daysShort:   	["P", "E", "T", "K", "N", "R", "L", "P"],
 		daysMin:     	["P", "E", "T", "K", "N", "R", "L", "P"],

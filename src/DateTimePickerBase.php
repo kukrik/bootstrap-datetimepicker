@@ -2,6 +2,7 @@
 
 namespace QCubed\Plugin;
 
+use QCubed\Project\Application;
 use QCubed\Project\Control\ControlBase;
 use QCubed\Project\Control\FormBase;
 use QCubed\Exception\Caller;

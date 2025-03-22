@@ -26,7 +26,10 @@
             <div class="col-sm-3">
                 <?= _r($this->datetimepicker1); ?>
             </div>
-            <p style="padding-top: 6px; display: inline-block;">Output the database through the QDateTime class in the datetime format: <?= _r($this->label1); ?></p>
+            <div class="col-sm-7">
+                <span>Output the database through the QDateTime class in the datetime format: </span>
+                <?= _r($this->label1); ?>
+            </div>
         </div>
 
         <div class="form-group">
@@ -34,7 +37,10 @@
             <div class="col-sm-3">
                 <?= _r($this->datetimepicker2); ?>
             </div>
-            <p style="padding-top: 6px; display: inline-block;">Output the database through the QDateTime class in the date format: <?= _r($this->label2); ?></p>
+            <div class="col-sm-7">
+                <span>Output the database through the QDateTime class in the date format: </span>
+                <?= _r($this->label2); ?>
+            </div>
         </div>
 
         <div class="form-group">
@@ -42,7 +48,10 @@
             <div class="col-sm-3">
                 <?= _r($this->datetimepicker3); ?>
             </div>
-            <p style="padding-top: 6px; display: inline-block;">Output the database through the QDateTime class in the time format: <?= _r($this->label3); ?></p>
+            <div class="col-sm-7">
+                <span>Output the database through the QDateTime class in the time format: </span>
+                <?= _r($this->label3); ?>
+            </div>
         </div>
 
         <div class="form-group">
@@ -50,7 +59,10 @@
             <div class="col-sm-3">
                 <?= _r($this->yearpicker); ?>
             </div>
-            <p style="padding-top: 6px; display: inline-block;">Output the database through the YearPicker class in the year format: <?= _r($this->label4); ?></p>
+            <div class="col-sm-7">
+                <span>Output the database through the YearPicker class in the year format: </span>
+                <?= _r($this->label4); ?>
+            </div>
         </div>
 
     </div>

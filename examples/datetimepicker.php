@@ -25,7 +25,7 @@ class ExamplesForm extends Form
     protected function formCreate()
     {
         $this->datetimepicker1 = new Q\Plugin\DateTimePicker($this);
-        //$this->datetimepicker1->Language = 'ee';
+        $this->datetimepicker1->Language = 'et';
         //$this->datetimepicker1->WeekStart = 1;
         $this->datetimepicker1->TodayHighlight = true;
         $this->datetimepicker1->TodayBtn = true;
@@ -38,12 +38,15 @@ class ExamplesForm extends Form
         $this->datetimepicker1->DateTimePickerType = Q\Plugin\DateTimePickerBase::DEFAULT_OUTPUT_DATETIME;
         $this->datetimepicker1->ActionParameter = $this->datetimepicker1->ControlId;
         $this->datetimepicker1->addAction(new Change(), new Ajax('setDate_1'));
+        // Added the ability to trigger another desired event when clicking the "Clear" button
+        $this->datetimepicker1->addAction(new QCubed\Plugin\Event\Clear(), new Ajax('datetimepicker_Clear'));
+        $this->datetimepicker1->AddJavascriptFile(QCUBED_DATETIMEPICKER_ASSETS_URL . "/js/locales/bootstrap-datetimepicker." . $this->datetimepicker1->Language . ".js");
 
         $this->label1 = new Bs\Label($this);
-        $this->label1->setCssStyle('display', 'inline;');
+        $this->label1->TagName = 'span';
 
         $this->datetimepicker2 = new Q\Plugin\DateTimePicker($this);
-        //$this->datetimepicker2->Language = 'ee';
+        $this->datetimepicker2->Language = 'et';
         //$this->datetimepicker2->WeekStart = 1;
         $this->datetimepicker2->TodayHighlight = true;
         $this->datetimepicker2->TodayBtn = true;
@@ -56,12 +59,13 @@ class ExamplesForm extends Form
         $this->datetimepicker2->DateTimePickerType = Q\Plugin\DateTimePickerBase::DEFAULT_OUTPUT_DATE;
         $this->datetimepicker2->ActionParameter = $this->datetimepicker2->ControlId;
         $this->datetimepicker2->addAction(new Change(), new Ajax('setDate_2'));
+        $this->datetimepicker1->AddJavascriptFile(QCUBED_DATETIMEPICKER_ASSETS_URL . "/js/locales/bootstrap-datetimepicker." . $this->datetimepicker2->Language . ".js");
+
 
         $this->label2 = new Bs\Label($this);
-        $this->label2->setCssStyle('display', 'inline;');
+        $this->label2->TagName = 'span';
 
         $this->datetimepicker3 = new Q\Plugin\DateTimePicker($this);
-
         $this->datetimepicker3->Language = 'de';
         //$this->datetimepicker3->WeekStart = 1;
         $this->datetimepicker3->TodayBtn = true;
@@ -75,10 +79,10 @@ class ExamplesForm extends Form
         $this->datetimepicker3->DateTimePickerType = Q\Plugin\DateTimePickerBase::DEFAULT_OUTPUT_TIME;
         $this->datetimepicker3->ActionParameter = $this->datetimepicker3->ControlId;
         $this->datetimepicker3->addAction(new Change(), new Ajax('setDate_3'));
-
+        $this->datetimepicker1->AddJavascriptFile(QCUBED_DATETIMEPICKER_ASSETS_URL . "/js/locales/bootstrap-datetimepicker." . $this->datetimepicker3->Language . ".js");
 
         $this->label3 = new Bs\Label($this);
-        $this->label3->setCssStyle('display', 'inline;');
+        $this->label3->TagName = 'span';
 
         $this->yearpicker = new Q\Plugin\YearPicker($this);
         $this->yearpicker->Language = 'de';
@@ -88,9 +92,16 @@ class ExamplesForm extends Form
         $this->yearpicker->ActionParameter = $this->yearpicker->ControlId;
         $this->yearpicker->addAction(new Change(), new Ajax('setYear'));
         //$this->yearpicker->Text = 2049;
+        $this->datetimepicker1->AddJavascriptFile(QCUBED_DATETIMEPICKER_ASSETS_URL . "/js/locales/bootstrap-datetimepicker." . $this->yearpicker->Language . ".js");
+
 
         $this->label4 = new Bs\Label($this);
-        $this->label4->setCssStyle('display', 'inline;');
+        $this->label4->TagName = 'span';
+    }
+
+    protected function datetimepicker_Clear(ActionParams $params)
+    {
+        Application::displayAlert("CLEAR EVENT TRUE");
     }
 
     protected function setDate_1(ActionParams $params)

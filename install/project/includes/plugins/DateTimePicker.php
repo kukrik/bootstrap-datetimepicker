@@ -37,9 +37,5 @@ class DateTimePicker extends DateTimePickerBase
 		$this->addCssFile(QCUBED_DATETIMEPICKER_ASSETS_URL . "/css/bootstrap-datetimepicker.css");
 		$this->AddCssFile(QCUBED_BOOTSTRAP_CSS); // make sure they know
 		$this->AddCssFile(QCUBED_FONT_AWESOME_CSS); // make sure they know
-
-		$this->AddJavascriptFile(QCUBED_DATETIMEPICKER_ASSETS_URL . "/js/locales/bootstrap-datetimepicker.ee.js");
-		$this->AddJavascriptFile(QCUBED_DATETIMEPICKER_ASSETS_URL . "/js/locales/bootstrap-datetimepicker.de.js");
-		$this->AddJavascriptFile(QCUBED_DATETIMEPICKER_ASSETS_URL . "/js/locales/bootstrap-datetimepicker.fr.js");
 	}
 }

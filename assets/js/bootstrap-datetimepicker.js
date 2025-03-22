@@ -1049,6 +1049,9 @@
                 break;
               case 'clear':
                 this.reset();
+                // Adding a custom "clear" event
+                // This custom event is passed to the appropriate object on the PHP side to be triggered.
+                this.element.trigger('clear');
                 if (this.autoclose) {
                   this.hide();
                 }
@@ -1936,6 +1939,7 @@
     '</table>' +
     '</div>' +
     '</div>';
+
   $.fn.datetimepicker.DPGlobal = DPGlobal;
 
   /* DATETIMEPICKER NO CONFLICT
