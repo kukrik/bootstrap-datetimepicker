@@ -2,11 +2,9 @@
 
 namespace QCubed\Plugin;
 
-use QCubed\Project\Application;
-use QCubed\Project\Control\ControlBase;
-use QCubed\Project\Control\FormBase;
 use QCubed\Exception\Caller;
 use QCubed\Exception\InvalidCast;
+use DateMalformedStringException;
 use QCubed\QDateTime;
 use QCubed\Type;
 
@@ -24,15 +22,23 @@ class DateTimePickerBase extends DateTimePickerBaseGen
     /**
      * Using these constants makes it easier to send the date and time to the database in the correct format.
      */
-    const DEFAULT_OUTPUT_DATETIME = 'Datetime';
-    const DEFAULT_OUTPUT_DATE = 'Date';
-    const DEFAULT_OUTPUT_TIME = 'Time';
+    const string DEFAULT_OUTPUT_DATETIME = 'Datetime';
+    const string DEFAULT_OUTPUT_DATE = 'Date';
+    const string DEFAULT_OUTPUT_TIME = 'Time';
 
     /** @var QDateTime|null */
-    protected $dttDateTime = null;
-    protected $strDateTimePickerType;
+    protected ?QDateTime $dttDateTime = null;
+    protected string $strDateTimePickerType;
 
-    public function parsePostData()
+    /**
+     * Parses the posted data for the control based on its type and populates the corresponding
+     * date or time value into the control's property if provided in the POST data.
+     *
+     * @return void
+     * @throws DateMalformedStringException
+     * @throws Caller
+     */
+    public function parsePostData(): void
     {
         // Check to see if this Control's Value was passed in via the POST data
         switch ($this->strDateTimePickerType) {
@@ -68,17 +74,27 @@ class DateTimePickerBase extends DateTimePickerBaseGen
         }
     }
 
-    public function validate()
+    /**
+     * Validates the current state or value of the object or data and returns the result of the validation.
+     *
+     * @return bool Indicates whether the validation was successful (true) or not (false).
+     */
+    public function validate(): bool
     {
         return true;
     }
 
     /**
-     * @param string $strName
-     * @return bool|mixed|null|string
-     * @throws Caller
+     * Retrieves the value of a property based on its name. Handles specific properties
+     * and delegates to the parent class for others. Throws an exception if the property
+     * does not exist or is inaccessible.
+     *
+     * @param string $strName The name of the property to retrieve.
+     *
+     * @return mixed The value of the requested property or null if it does not exist.
+     * @throws Caller If the property does not exist or is inaccessible.
      */
-    public function __get($strName)
+    public function __get(string $strName): mixed
     {
         switch ($strName) {
             case 'DateTime': return $this->dttDateTime ? clone($this->dttDateTime) : null;
@@ -94,7 +110,19 @@ class DateTimePickerBase extends DateTimePickerBaseGen
         }
     }
 
-    public function __set($strName, $mixValue)
+    /**
+     * Sets the value of a property for the object. Handles specific cases for 'DateTime'
+     * and 'DateTimePickerType', casting the provided value and applying the appropriate
+     * transformations. Delegates to the parent method for other property names.
+     *
+     * @param string $strName The name of the property to set.
+     * @param mixed $mixValue The value to be set for the specified property.
+     *
+     * @return void
+     * @throws InvalidCast If the provided value cannot be cast to the expected type.
+     * @throws Caller If an invalid property name is specified and cannot be handled by the parent class.
+     */
+    public function __set(string $strName, mixed $mixValue): void
     {
         switch ($strName) {
             case 'DateTime':

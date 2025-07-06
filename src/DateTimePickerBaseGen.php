@@ -2,13 +2,11 @@
 
 namespace QCubed\Plugin;
 
-use QCubed as Q;
-use QCubed\Control;
+use QCubed\ApplicationBase;
 use QCubed\Bootstrap as Bs;
 use QCubed\Exception\Caller;
 use QCubed\Exception\InvalidCast;
 use QCubed\ModelConnector\Param as QModelConnectorParam;
-use QCubed\Project\Control\ControlBase;
 use QCubed\Project\Application;
 use QCubed\Type;
 
@@ -21,9 +19,9 @@ use QCubed\Type;
 
 /**
  * All options that take a "Date" can handle a Date object; a String formatted according to the given format; or
- * a timedelta relative to today, eg '-1d', '+6m +1y', etc, where valid units are 'd' (day), 'w' (week), 'm' (month), and 'y' (year).
+ * a time delta relative today, e.g. '-1d', '+6m +1y', etc., where valid units are 'd' (day), 'w' (week), 'm' (month), and 'y' (year).
  *
- * You can also specify an ISO-8601 valid datetime, despite of the given format:
+ * You can also specify an ISO-8601 valid datetime, despite the given format:
  *                          yyyy-mm-dd
  *                          yyyy-mm-dd hh:ii
  *                          yyyy-mm-ddThh:ii
@@ -59,8 +57,8 @@ use QCubed\Type;
  * $this->dlg->Language = 'fr';
  * $this->dlg->WeekStart = 1;
  * $this->dlg->TodayHighlight = true;
- * $this->dlg->..........etc
- * $this->dlg->Format = 'dd.mm.yyyy'; // Please see the instructions for using the Format.
+ * $this->dlg->..........etc.
+ * $this->dlg->Format = 'dd.mm.yyyy'; // Please a see the instructions for using the Format.
  * $this->dlg->LinkFormat = Q\Plugin\DateTimePicker::DEFAULT_OUTPUT_DATETIME;
  * or
  * $this->dlg->LinkFormat = Q\Plugin\DateTimePicker::DEFAULT_OUTPUT_DATE;
@@ -77,7 +75,7 @@ use QCubed\Type;
  *                              Multiple values should be comma-separated. Example: disable weekends: [0,6].
  * @property boolean $AutoClose Default: false. Whether or not to close the datetimepicker immediately when a date is selected.
  * @property integer $StartView Default: 2. The view that the datetimepicker should show when it is opened. Accepts values of :
- *                              0 for the hour view
+ *                              0 for hour view
  *                              1 for the day view
  *                              2 for month view (the default)
  *                              3 for the 12-month overview
@@ -88,26 +86,26 @@ use QCubed\Type;
  *                              the datetimepicker to select the current date. If true, the "Today" button will
  *                              only move the current date into view; if "linked", the current date will also be selected.
  * @property boolean $TodayHighlight false. If true, highlights the current date.
- * @property boolean $ClearBtn Default: false. Whether or not to enable the date selector clear button.
+ * @property boolean $ClearBtn Default: false. Whether or not to enable the date, selector clears the button.
  * @property boolean $KeyboardNavigation Default: true. Whether or not to allow date navigation by arrow keys.
- * @property string $Language Default: 'en'. The two-letter code of the language to use for month and day names.
+ * @property string $Language Default: 'en'. The two-letter code of the language to use for a month and day names.
  *                              These will also be used as the input's value (and subsequently sent to the server in the
  *                              case of form submissions). Currently ships with English ('en'), German ('de'), Brazilian ('br'),
  *                              and Spanish ('es') translations, but others can be added (see I18N below). If an unknown
  *                              language code is given, English will be used.
  * @property boolean $ForceParse Default: true. Whether or not to force parsing of the input value when the picker is closed.
  *                              That is, when an invalid date is left in the input field by the user, the picker will forcibly
- *                              parse that value, and set the input's value to the new, valid date, conforming to the given format.
+ *                              parse that value and set the input's value to the new, valid date, conforming to the given format.
  * @property integer $MinuteStep Default: 5. The increment used to build the hour view. A preset is created for each minuteStep minutes.
- * @property string $PickerPosition Default: 'bottom-right' (other value supported : 'bottom-left'). This option is currently
- *                              only available in the component implementation. With it you can place the picker just
+ * @property string $PickerPosition Default: 'bottom-right' (other value supported: 'bottom-left'). This option is current
+ *                              only available in the component implementation. With it, you can place the picker just
  *                              under the input field.
  * @property string $ViewSelect Default: same as minView (supported values are: 'decade', 'year', 'month', 'day', 'hour').
- *                              With this option you can select the view from which the date will be selected. By default
- *                              it's the last one, however you can choose the first one, so at each click the date will be updated.
+ *                              With this option you can select the view from which the date will be selected. By default,
+ *                              it's the last one, however, you can choose the first one, so at each click the date will be updated.
  * @property boolean $ShowMeridian Default: false. This option will enable meridian views for day and hour views.
- * @property string $InitialDate Default: new Date(). You can initialize the viewer with a date. By default it's now,
- *                              so you can specify yesterday or today at midnight ...
+ * @property string $InitialDate Default: new Date(). You can initialize the viewer with a date. By default, it's now.
+ *                              so you could specify yesterday or today at midnight ...
  *
  * @see https://www.malot.fr/bootstrap-datetimepicker/ or https://github.com/smalot/bootstrap-datetimepicker
  * @package QCubed\Plugin
@@ -115,52 +113,59 @@ use QCubed\Type;
 
 class DateTimePickerBaseGen extends Bs\TextBox
 {
+    /** @var string|null */
+    protected ?string $strLinkField = null;
+    /** @var string|null */
+    protected ?string $strLinkFormat = null;
     /** @var string */
-    protected $strLinkField = null;
-    /** @var string */
-    protected $strLinkFormat = null;
-    /** @var string */
-    protected $strFormat = null;
-    /** @var integer */
-    protected $intWeekStart = null;
-    /** @var string */
-    protected $strStartDate = null;
-    /** @var string */
-    protected $strEndDate = null;
-    /** @var array */
-    protected $arrDaysOfWeekDisabled = null;
+    protected string $strFormat;
+    /** @var integer|null */
+    protected ?int $intWeekStart = null;
+    /** @var string|null */
+    protected ?string $strStartDate = null;
+    /** @var string|null */
+    protected ?string $strEndDate = null;
+    /** @var array|null */
+    protected ?array $arrDaysOfWeekDisabled = null;
     /** @var boolean */
-    protected $blnAutoClose = null;
-    /** @var integer */
-    protected $intStartView = null;
-    /** @var integer */
-    protected $intMinView = null;
-    /** @var integer */
-    protected $intMaxView = null;
+    protected ?bool $blnAutoClose = null;
+    /** @var integer|null */
+    protected ?int $intStartView = null;
+    /** @var integer|null */
+    protected ?int $intMinView = null;
+    /** @var integer|null */
+    protected ?int $intMaxView = null;
     /** @var boolean */
-    protected $blnTodayBtn = null;
+    protected ?bool $blnTodayBtn = null;
     /** @var boolean */
-    protected $blnClearBtn = null;
+    protected ?bool $blnClearBtn = null;
     /** @var boolean */
-    protected $blnTodayHighlight = null;
+    protected ?bool $blnTodayHighlight = null;
     /** @var boolean */
-    protected $blnKeyboardNavigation = null;
-    /** @var string */
-    protected $strLanguage = null;
+    protected ?bool $blnKeyboardNavigation = null;
+    /** @var string|null */
+    protected ?string $strLanguage = null;
     /** @var boolean */
-    protected $blnForceParse = null;
-    /** @var integer */
-    protected $intMinuteStep = null;
-    /** @var string */
-    protected $strPickerPosition = null;
-    /** @var string */
-    protected $strViewSelect = null;
+    protected ?bool $blnForceParse = null;
+    /** @var integer|null */
+    protected ?int $intMinuteStep = null;
+    /** @var string|null */
+    protected ?string $strPickerPosition = null;
+    /** @var string|null */
+    protected ?string $strViewSelect = null;
     /** @var boolean */
-    protected $blnShowMeridian = null;
-    /** @var string */
-    protected $strInitialDate = null;
+    protected ?bool $blnShowMeridian = null;
+    /** @var string|null */
+    protected ?string $strInitialDate = null;
 
-    protected function makeJqOptions()
+    /**
+     * Constructs an array of jQuery options by combining parent options with additional properties.
+     *
+     * Each property is checked for existence and non-null value before being added to the option array.
+     *
+     * @return array An associative array of jQuery options to be passed to a jQuery widget.
+     */
+    protected function makeJqOptions(): array
     {
         $jqOptions = parent::MakeJqOptions();
         if (!is_null($val = $this->LinkField)) {$jqOptions['linkField'] = $val;}
@@ -188,7 +193,12 @@ class DateTimePickerBaseGen extends Bs\TextBox
         return $jqOptions;
     }
 
-    public function getJqSetupFunction()
+    /**
+     * Retrieves the jQuery setup function name associated with the control.
+     *
+     * @return string The name of the jQuery setup function.
+     */
+    public function getJqSetupFunction(): string
     {
         return 'datetimepicker';
     }
@@ -198,9 +208,9 @@ class DateTimePickerBaseGen extends Bs\TextBox
      *
      * This method does not accept any arguments.
      */
-    public function remove()
+    public function remove(): void
     {
-        Application::executeControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "remove", Application::PRIORITY_LOW);
+        Application::executeControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "remove", ApplicationBase::PRIORITY_LOW);
     }
 
     /**
@@ -208,9 +218,9 @@ class DateTimePickerBaseGen extends Bs\TextBox
      *
      * This method does not accept any arguments.
      */
-    public function show()
+    public function show(): void
     {
-        Application::executeControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "show", Application::PRIORITY_LOW);
+        Application::executeControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "show", ApplicationBase::PRIORITY_LOW);
     }
 
     /**
@@ -218,9 +228,9 @@ class DateTimePickerBaseGen extends Bs\TextBox
      *
      * This method does not accept any arguments.
      */
-    public function hide()
+    public function hide(): void
     {
-        Application::executeControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "hide", Application::PRIORITY_LOW);
+        Application::executeControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "hide", ApplicationBase::PRIORITY_LOW);
     }
 
     /**
@@ -228,12 +238,24 @@ class DateTimePickerBaseGen extends Bs\TextBox
      *
      * This method does not accept any arguments.
      */
-    public function update()
+    public function update(): void
     {
-        Application::executeControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "update", Application::PRIORITY_LOW);
+        Application::executeControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "update", ApplicationBase::PRIORITY_LOW);
     }
 
-    public function __get($strName)
+    /**
+     * Magic method to retrieve the value of a property by name.
+     *
+     * This method fetches the value of the specified property if it exists in the defined cases.
+     * If the property is not defined within the class, it attempts to access it using the parent's
+     * __get method. Throws an exception if the property is not found.
+     *
+     * @param string $strName The name of the property to retrieve.
+     *
+     * @return mixed The value of the requested property or the parent's property value if defined, otherwise throws an exception.
+     * @throws Caller If the property does not exist in the class or parent class.
+     */
+    public function __get(string $strName): mixed
     {
         switch ($strName) {
             case 'LinkField': return $this->strLinkField;
@@ -269,12 +291,48 @@ class DateTimePickerBaseGen extends Bs\TextBox
         }
     }
 
-    public function __set($strName, $mixValue)
+    /**
+     * Magic method to set property values for the class.
+     *
+     * Valid property names include:
+     * - LinkField
+     * - LinkFormat
+     * - Format
+     * - WeekStart
+     * - StartDate
+     * - EndDate
+     * - DaysOfWeekDisabled
+     * - AutoClose
+     * - StartView
+     * - MinView
+     * - MaxView
+     * - TodayBtn
+     * - ClearBtn
+     * - TodayHighlight
+     * - KeyboardNavigation
+     * - Language
+     * - ForceParse
+     * - MinuteStep
+     * - PickerPosition
+     * - ViewSelect
+     * - ShowMeridian
+     *
+     * Each property name must be set to a corresponding value of a valid type. If an invalid type is provided,
+     * an InvalidCast exception will be thrown during the casting process.
+     *
+     * @param string $strName The name of the property to be set.
+     * @param mixed $mixValue The value to assign to the property.
+     *
+     * @return void
+     * @throws InvalidCast If $mixValue does not match the expected type of the property specified by $strName.
+     * @throws \QCubed\Exception\Caller
+     */
+    public function __set(string $strName, mixed $mixValue): void
     {
         switch ($strName) {
             case 'LinkField':
                 try {
-                    $this->strLinkField = Type::Cast($mixValue, Type::STRING);
+                    $this->strLinkField = Type::cast($mixValue, Type::STRING);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'linkField', $this->strLinkField);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -284,7 +342,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'LinkFormat':
                 try {
-                    $this->strLinkFormat = Type::Cast($mixValue, Type::STRING);
+                    $this->strLinkFormat = Type::cast($mixValue, Type::STRING);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'linkFormat', $this->strLinkFormat);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -294,7 +352,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'Format':
                 try {
-                    $this->strFormat = Type::Cast($mixValue, Type::STRING);
+                    $this->strFormat = Type::cast($mixValue, Type::STRING);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'format', $this->strFormat);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -304,7 +362,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'WeekStart':
                 try {
-                    $this->intWeekStart = Type::Cast($mixValue, Type::INTEGER);
+                    $this->intWeekStart = Type::cast($mixValue, Type::INTEGER);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'weekStart', $this->intWeekStart);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -314,7 +372,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'StartDate':
                 try {
-                    $this->strStartDate = Type::Cast($mixValue, Type::STRING);
+                    $this->strStartDate = Type::cast($mixValue, Type::STRING);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'startDate', $this->strStartDate);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -324,7 +382,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'EndDate':
                 try {
-                    $this->strEndDate = Type::Cast($mixValue, Type::STRING);
+                    $this->strEndDate = Type::cast($mixValue, Type::STRING);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'endDate', $this->strEndDate);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -334,7 +392,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'DaysOfWeekDisabled':
                 try {
-                    $this->arrDaysOfWeekDisabled = Type::Cast($mixValue, Type::ARRAY_TYPE);
+                    $this->arrDaysOfWeekDisabled = Type::cast($mixValue, Type::ARRAY_TYPE);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'daysOfWeekDisabled', $this->arrDaysOfWeekDisabled);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -344,7 +402,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'AutoClose':
                 try {
-                    $this->blnAutoClose = Type::Cast($mixValue, Type::BOOLEAN);
+                    $this->blnAutoClose = Type::cast($mixValue, Type::BOOLEAN);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'autoclose', $this->blnAutoClose);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -354,7 +412,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'StartView':
                 try {
-                    $this->intStartView = Type::Cast($mixValue, Type::INTEGER);
+                    $this->intStartView = Type::cast($mixValue, Type::INTEGER);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'startView', $this->intStartView);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -364,7 +422,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'MinView':
                 try {
-                    $this->intMinView = Type::Cast($mixValue, Type::INTEGER);
+                    $this->intMinView = Type::cast($mixValue, Type::INTEGER);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'minView', $this->intMinView);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -374,7 +432,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'MaxView':
                 try {
-                    $this->intMaxView = Type::Cast($mixValue, Type::STRING);
+                    $this->intMaxView = Type::cast($mixValue, Type::STRING);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'maxView', $this->intMaxView);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -384,7 +442,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'TodayBtn':
                 try {
-                    $this->blnTodayBtn = Type::Cast($mixValue, Type::BOOLEAN);
+                    $this->blnTodayBtn = Type::cast($mixValue, Type::BOOLEAN);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'todayBtn', $this->blnTodayBtn);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -394,7 +452,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'ClearBtn':
                 try {
-                    $this->blnClearBtn = Type::Cast($mixValue, Type::BOOLEAN);
+                    $this->blnClearBtn = Type::cast($mixValue, Type::BOOLEAN);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'clearBtn', $this->blnClearBtn);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -404,7 +462,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'TodayHighlight':
                 try {
-                    $this->blnTodayHighlight = Type::Cast($mixValue, Type::BOOLEAN);
+                    $this->blnTodayHighlight = Type::cast($mixValue, Type::BOOLEAN);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'todayHighlight', $this->blnTodayHighlight);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -414,7 +472,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'KeyboardNavigation':
                 try {
-                    $this->blnKeyboardNavigation = Type::Cast($mixValue, Type::STRING);
+                    $this->blnKeyboardNavigation = Type::cast($mixValue, Type::STRING);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'keyboardNavigation', $this->blnKeyboardNavigation);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -424,7 +482,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'Language':
                 try {
-                    $this->strLanguage = Type::Cast($mixValue, Type::STRING);
+                    $this->strLanguage = Type::cast($mixValue, Type::STRING);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'language', $this->strLanguage);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -434,7 +492,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'ForceParse':
                 try {
-                    $this->blnForceParse = Type::Cast($mixValue, Type::BOOLEAN);
+                    $this->blnForceParse = Type::cast($mixValue, Type::BOOLEAN);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'forceParse', $this->blnForceParse);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -444,7 +502,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'MinuteStep':
                 try {
-                    $this->intMinuteStep = Type::Cast($mixValue, Type::INTEGER);
+                    $this->intMinuteStep = Type::cast($mixValue, Type::INTEGER);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'minuteStep', $this->intMinuteStep);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -454,7 +512,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'PickerPosition':
                 try {
-                    $this->strPickerPosition = Type::Cast($mixValue, Type::STRING);
+                    $this->strPickerPosition = Type::cast($mixValue, Type::STRING);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'pickerPosition', $this->strPickerPosition);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -464,7 +522,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'ViewSelect':
                 try {
-                    $this->strViewSelect = Type::Cast($mixValue, Type::STRING);
+                    $this->strViewSelect = Type::cast($mixValue, Type::STRING);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'viewSelect', $this->strViewSelect);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -474,7 +532,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'ShowMeridian':
                 try {
-                    $this->blnShowMeridian = Type::Cast($mixValue, Type::BOOLEAN);
+                    $this->blnShowMeridian = Type::cast($mixValue, Type::BOOLEAN);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'showMeridian', $this->blnShowMeridian);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -484,7 +542,7 @@ class DateTimePickerBaseGen extends Bs\TextBox
 
             case 'InitialDate':
                 try {
-                    $this->strInitialDate = Type::Cast($mixValue, Type::STRING);
+                    $this->strInitialDate = Type::cast($mixValue, Type::STRING);
                     $this->addAttributeScript($this->getJqSetupFunction(), 'option', 'initialDate', $this->strInitialDate);
                     break;
                 } catch (InvalidCast $objExc) {
@@ -507,10 +565,12 @@ class DateTimePickerBaseGen extends Bs\TextBox
      * If this control is attachable to a codegenerated control in a ModelConnector, this function will be
      * used by the ModelConnector designer dialog to display a list of options for the control.
      * @return QModelConnectorParam[]
-     **/
-    public static function getModelConnectorParams()
+     *
+     * @throws Caller
+     */
+    public static function getModelConnectorParams(): array
     {
-        return array_merge(parent::GetModelConnectorParams(), array());
+        return array_merge(parent::getModelConnectorParams(), array());
     }
 }
 

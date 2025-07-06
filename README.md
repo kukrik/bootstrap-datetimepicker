@@ -1,7 +1,7 @@
 # QCubed DateTimePicker Plugin
 
 
-## DateTimePicker for QCubed v4
+## DateTimePicker for QCubed-4
 
 The DateTimePicker plugin allows to you use the DateTime Picker, which is a Bootstrap form component to handle date, time and year data, on your forms.
 
@@ -19,7 +19,7 @@ If you have not previously installed QCubed Bootstrap and twitter bootstrap, run
 and
 
 ```
-    composer require kukrik/bootstrap
+    composer require qcubed-4/plugin-bootstrap
     composer require kukrik/bootstrap-datetimepicker
 ```
 

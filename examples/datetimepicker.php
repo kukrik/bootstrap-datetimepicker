@@ -3,7 +3,7 @@ require('qcubed.inc.php');
 
 use QCubed as Q;
 use QCubed\Bootstrap as Bs;
-use QCubed\Project\Control\ControlBase;
+use QCubed\Exception\Caller;
 use QCubed\Project\Control\FormBase as Form;
 use QCubed\Action\ActionParams;
 use QCubed\Action\Ajax;
@@ -12,17 +12,27 @@ use QCubed\Project\Application;
 
 class ExamplesForm extends Form
 {
-    protected $datetimepicker1;
-    protected $datetimepicker2;
-    protected $datetimepicker3;
-    protected $yearpicker;
+    protected Q\Plugin\DateTimePicker $datetimepicker1;
+    protected Q\Plugin\DateTimePicker $datetimepicker2;
+    protected Q\Plugin\DateTimePicker $datetimepicker3;
+    protected Q\Plugin\YearPicker $yearpicker;
 
-    protected $label1;
-    protected $label2;
-    protected $label3;
-    protected $label4;
+    protected Bs\Label $label1;
+    protected Bs\Label $label2;
+    protected Bs\Label $label3;
+    protected Bs\Label $label4;
 
-    protected function formCreate()
+    /**
+     * Initializes form components such as datetime pickers, labels, and year pickers.
+     *
+     * This method configures multiple datetime pickers with various settings, including
+     * language, format, views, and associated actions. It also provides labels for the components
+     * and adds additional functionality using JavaScript files. A year picker is also configured.
+     *
+     * @return void
+     * @throws Caller
+     */
+    protected function formCreate(): void
     {
         $this->datetimepicker1 = new Q\Plugin\DateTimePicker($this);
         $this->datetimepicker1->Language = 'et';
@@ -40,7 +50,7 @@ class ExamplesForm extends Form
         $this->datetimepicker1->addAction(new Change(), new Ajax('setDate_1'));
         // Added the ability to trigger another desired event when clicking the "Clear" button
         $this->datetimepicker1->addAction(new QCubed\Plugin\Event\Clear(), new Ajax('datetimepicker_Clear'));
-        $this->datetimepicker1->AddJavascriptFile(QCUBED_DATETIMEPICKER_ASSETS_URL . "/js/locales/bootstrap-datetimepicker." . $this->datetimepicker1->Language . ".js");
+        $this->datetimepicker1->addJavascriptFile(QCUBED_DATETIMEPICKER_ASSETS_URL . "/js/locales/bootstrap-datetimepicker." . $this->datetimepicker1->Language . ".js");
 
         $this->label1 = new Bs\Label($this);
         $this->label1->TagName = 'span';
@@ -99,34 +109,41 @@ class ExamplesForm extends Form
         $this->label4->TagName = 'span';
     }
 
-    protected function datetimepicker_Clear(ActionParams $params)
+    /**
+     * Clears the datetime picker and triggers a clear event alert.
+     *
+     * @param ActionParams $params The parameters associated with the action.
+     *
+     * @return void
+     */
+    protected function datetimepicker_Clear(ActionParams $params): void
     {
         Application::displayAlert("CLEAR EVENT TRUE");
     }
 
-    protected function setDate_1(ActionParams $params)
+    protected function setDate_1(ActionParams $params): void
     {
         $objControlToLookup = $this->getControl($params->ActionParameter);
         $this->label1->Text = $objControlToLookup->DateTime;
     }
 
-    protected function setDate_2(ActionParams $params)
+    protected function setDate_2(ActionParams $params): void
     {
         $objControlToLookup = $this->getControl($params->ActionParameter);
         $this->label2->Text = $objControlToLookup->DateTime;
     }
 
-    protected function setDate_3(ActionParams $params)
+    protected function setDate_3(ActionParams $params): void
     {
         $objControlToLookup = $this->getControl($params->ActionParameter);
         $this->label3->Text = $objControlToLookup->DateTime;
     }
 
-    protected function setYear(ActionParams $params)
+    protected function setYear(ActionParams $params): void
     {
         $objControlToLookup = $this->getControl($params->ActionParameter);
         $this->label4->Text = $objControlToLookup->Text;
     }
 
 }
-ExamplesForm::Run('ExamplesForm');
+ExamplesForm::run('ExamplesForm');
