@@ -8,6 +8,8 @@ The DateTimePicker plugin allows to you use the DateTime Picker, which is a Boot
 Home page for the lib is https://github.com/smalot/bootstrap-datetimepicker and demo is at
 https://www.malot.fr/bootstrap-datetimepicker, where you can see example of use.
 
+This plugin works starting from PHP version 8.3+.
+
 ![Image of kukrik](screenshot/datetimepicker_screenshot_1.jpg?raw=true)
 
 ![Image of kukrik](screenshot/datetimepicker_screenshot_2.jpg?raw=true)
