@@ -33,7 +33,7 @@ function waitFor(testFx, onReady, timeOutMillis) {
                 }
             }
         }, 100); //< repeat check every 100ms
-};
+}
 
 if (system.args.length !== 2) {
     console.log('Usage: run-qunit.js URL');
@@ -120,7 +120,7 @@ page.open(openPath, function(status){
                     if (!source)
                         htmlLine = htmlLine.replace('<', '&lt;').replace('>', '&gt;');
                     colorized += '<div class="code' + hitmiss + '">' + htmlLine + '</div>\n';
-                };
+                }
                 colorized = coverageBase.replace('COLORIZED_LINE_HTML', colorized);
 
                 fs.write('coverage.html', colorized, 'w');

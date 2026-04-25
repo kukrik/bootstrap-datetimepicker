@@ -121,24 +121,52 @@ class ExamplesForm extends Form
         Application::displayAlert("CLEAR EVENT TRUE");
     }
 
+    /**
+     * Sets the date for the specified control based on the provided parameters.
+     *
+     * @param ActionParams $params The action parameters containing the necessary information to identify the control.
+     *
+     * @return void
+     */
     protected function setDate_1(ActionParams $params): void
     {
         $objControlToLookup = $this->getControl($params->ActionParameter);
         $this->label1->Text = $objControlToLookup->DateTime;
     }
 
+    /**
+     * Sets the date for label2 by retrieving the DateTime value from a control identified by the action parameter.
+     *
+     * @param ActionParams $params The parameters containing the action parameter used to identify the control.
+     *
+     * @return void
+     */
     protected function setDate_2(ActionParams $params): void
     {
         $objControlToLookup = $this->getControl($params->ActionParameter);
         $this->label2->Text = $objControlToLookup->DateTime;
     }
 
+    /**
+     * Sets the date value of a control to label3's text property.
+     *
+     * @param ActionParams $params Parameters containing the action data.
+     *
+     * @return void
+     */
     protected function setDate_3(ActionParams $params): void
     {
         $objControlToLookup = $this->getControl($params->ActionParameter);
         $this->label3->Text = $objControlToLookup->DateTime;
     }
 
+    /**
+     * Sets the text value of a control to label4's text property.
+     *
+     * @param ActionParams $params Parameters containing the action data.
+     *
+     * @return void
+     */
     protected function setYear(ActionParams $params): void
     {
         $objControlToLookup = $this->getControl($params->ActionParameter);

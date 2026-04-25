@@ -9,11 +9,11 @@
 		daysMin:     	["P", "E", "T", "K", "N", "R", "L", "P"],
 		months:      	["Jaanuar", "Veebruar", "Märts", "Aprill", "Mai", "Juuni", "Juuli", "August", "September", "Oktoober", "November", "Detsember"],
 		monthsShort: 	["Jaan", "Veebr", "Märts", "Apr", "Mai", "Juuni", "Juuli", "Aug", "Sept", "Okt", "Nov", "Dets"],
-		today:       	"Täna",
-		clear:     		"Tühjenda",
+        clear:       	"Puhasta",
+        today:       	"Täna",
 		suffix:     	[],
-		meridiem: 		[],
+		meridiem: 		["am", "pm"],
 		weekStart: 		1,
-		format: 		"dd.mm.yyyy hh:ii:ss"
+		format: 		"dd.mm.yyyy hh:ii"
 	};
 }(jQuery));
